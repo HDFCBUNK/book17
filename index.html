@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookzii - Your Booking Companion</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('cafe.jpg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        header .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff9800;
+        }
+
+        header nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        header nav a:hover {
+            color: #ff9800;
+        }
+
+        .container {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+        }
+
+        .container.active {
+            display: flex;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #ff9800;
+        }
+
+        .card input, .card select {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .card button {
+            width: 100%;
+            padding: 12px;
+            background: #ff9800;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .card button:hover {
+            background: #e68900;
+        }
+
+        .results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .result-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .result-card img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .result-card h3 {
+            margin: 10px 0;
+            color: #ff9800;
+        }
+
+        .result-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 0.9rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Bookzii</div>
+        <nav>
+            <a onclick="showPage('login-page')">Home</a>
+            <a onclick="showPage('contact-page')">Contact</a>
+            <a onclick="showPage('about-page')">About</a>
+            <a onclick="showPage('login-page')">Login</a>
+        </nav>
+    </header>
+
+    <!-- Login Page -->
+    <div class="container active" id="login-page">
+        <div class="card">
+            <h1>Login</h1>
+            <input type="text" id="username" placeholder="Enter Username" required>
+            <input type="password" id="password" placeholder="Enter Password" required>
+            <button onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div class="container" id="contact-page">
+        <div class="card">
+            <h1>Contact Us</h1>
+            <p>For inquiries, email us at support@bookzii.com or call +1-234-567-8900.</p>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div class="container" id="about-page">
+        <div class="card">
+            <h1>About Bookzii</h1>
+            <p>Bookzii is your ultimate booking companion for tables, hotels, resorts, and more.</p>
+        </div>
+    </div>
+
+    <!-- Booking Page -->
+    <div class="container" id="booking-page">
+        <div class="card">
+            <h1>Book Now</h1>
+            <select id="booking-type">
+                <option value="table">Table</option>
+                <option value="resort">Resort</option>
+                <option value="waterpark">Water Park</option>
+                <option value="hotel">Hotel</option>
+            </select>
+            <input type="number" id="members" placeholder="Number of Members" required>
+            <button onclick="searchOptions()">Search</button>
+        </div>
+    </div>
+
+    <!-- Results Page -->
+    <div class="container" id="results-page">
+        <div class="results" id="results"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Bookzii. All Rights Reserved. Designed with love.</p>
+    </footer>
+
+    <script>
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.container');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                alert('Please fill in both fields.');
+                return;
+            }
+
+            showPage('booking-page');
+        }
+
+        function searchOptions() {
+            const bookingType = document.getElementById('booking-type').value;
+            const members = document.getElementById('members').value;
+
+            if (!members || members <= 0) {
+                alert('Please enter a valid number of members.');
+                return;
+            }
+
+            const options = {
+                table: [
+                    { name: 'Cozy Cafe', image: 'cafe1.jpg', description: 'Perfect for small groups.' },
+                    { name: 'Sunny Restaurant', image: 'cafe2.jpg', description: 'Great for a meal.' }
+                ],
+                resort: [
+                    { name: 'Luxury Resort', image: 'resort1.jpg', description: 'Relax and unwind.' },
+                    { name: 'Eco Retreat', image: 'resort2.jpg', description: 'A peaceful escape.' }
+                ],
+                waterpark: [
+                    { name: 'Splash Zone', image: 'waterpark1.jpg', description: 'Fun for all ages.' },
+                    { name: 'Wave Pool', image: 'waterpark2.jpg', description: 'Thrilling water adventures.' }
+                ],
+                hotel: [
+                    { name: 'Luxury Hotel', image: 'hotel1.jpg', description: 'Comfortable and stylish.' },
+                    { name: 'Budget Stay', image: 'hotel3.jpg', description: 'Affordable and cozy.' }
+                ]
+            };
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = options[bookingType]
+                .map(option => `
+                    <div class="result-card">
+                        <img src="${option.image}" alt="${option.name}">
+                        <h3>${option.name}</h3>
+                        <p>${option.description}</p>
+                    </div>
+                `)
+                .join('');
+
+            showPage('results-page');
+        }
+    </script>
+</body>
+</html>
